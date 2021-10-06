@@ -9,9 +9,7 @@ import java.io.*;
 public class Image {
     public void converter(){
         try {
-            File file = new File("camo.jpg");
-           // File file = new File("camo-forest.jpg");
-           // File file = new File("katana-2.jpg");
+           File file = new File("Test-2.jpg");
             BufferedImage source = ImageIO.read(file);
             BufferedImage result = new BufferedImage(source.getWidth(),source.getHeight(),source.getType());
             for(int x =0; x<source.getWidth();x++){
@@ -41,27 +39,26 @@ public class Image {
         File Tfile = new File("Texted Image.txt");
         Tfile.createNewFile();
         FileWriter writer = new FileWriter(Tfile);
-        File jpg = new File("WhiteBlackImage.jpg");
+      File jpg = new File("WhiteBlackImage.jpg");
         BufferedImage source = ImageIO.read(jpg);
-       // BufferedImage result = new BufferedImage(source.getWidth(),source.getHeight(),source.getType());
+
+
         for(int x=0;x<source.getWidth();x++){
             for(int y=0;y<source.getHeight();y++){
+                writer.write(" ");
                 Color color = new Color(source.getRGB(x,y));
                 int RGB = color.getBlue();
-               // System.out.print(RGB+" ");
-                if (y== source.getHeight()-1){
-                    writer.write("\n");
-                }
-                if(RGB < 221){
-                    writer.write(".");
-                }else {
-                    writer.write(" ");
-                }
 
 
-
-
+                 if(RGB <=253){
+                     writer.write("*");
+               }else {
+                     writer.write(" ");
+               }
             }
+            writer.write("\r\n");
+
+
 
         }
 writer.flush();
