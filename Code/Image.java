@@ -50,6 +50,7 @@ public class Image {
             boolean symbol = false;
             String DefaultB = "*";
             String DefaultD = "&";
+            String DefaultMB = "·";
             int min = 256;
             int[] ValuesColor = new int[255];
             int[] ValuesCount = new int[255];
@@ -133,9 +134,11 @@ public class Image {
                          if(RGB <=ValuesColor[Number]){
                              if (RGB<=30){
                                  writer.write(DefaultD);
-                             }else {
+                             }else if(RGB>30 && RGB<=135){
                                  writer.write(DefaultB);
-
+                             }
+                             else {
+                                 writer.write(DefaultMB);
                              }
                         } else {
                             writer.write(" ");
