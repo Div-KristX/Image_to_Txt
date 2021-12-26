@@ -1,7 +1,6 @@
 package com.company;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
@@ -49,13 +48,15 @@ public class Image {
   public void TextBuilderCustom() {
     File TextedFile = new File("Texted Image.txt");
     try (FileWriter writer = new FileWriter(TextedFile)) {
+      long start = System.currentTimeMillis();
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
-      boolean error = false;
+      boolean ColorsSettings = false;
       boolean symbol = false;
       String DefaultB = "*";
       String DefaultD = "&";
       String DefaultMB = "·";
+      String DefaultW = " ";
       int min = 256;
       int[] ValuesColor = new int[255];
       int[] ValuesCount = new int[255];
@@ -64,23 +65,30 @@ public class Image {
       Scanner SD = new Scanner(System.in);
       int count = 0;
       System.out.println(
-          "Change default symbols? (*) - for bright, (&) - for dark, (·) - for the brightest (Sometimes it can not be viewed, it is a Unicode symbol) ");
-      System.out.println("Write 1 to change -");
+          "Change default symbols? \n"
+              + "(&) - for dark,\n"
+              + "(*) - for bright, \n"
+              + "(·) - for the brightest (Sometimes it can not be viewed, it is a Unicode symbol), \n"
+              + "( ) - for white");
+      System.out.print("Write 1 to change - ");
       int chars = c.nextInt();
+
       if (chars == 1) {
         symbol = true;
-        System.out.print("Write symbol for bright color - ");
-        String newBsymb = SB.nextLine();
-        System.out.print("Write symbol for dark color - ");
+        System.out.print("Write the symbol for dark color - ");
         String newDsymb = SD.nextLine();
-        System.out.print("Write symbol for the brightest color - ");
+        System.out.print("Write the symbol for bright color - ");
+        String newBsymb = SB.nextLine();
+        System.out.print("Write the symbol for the brightest color - ");
         String newMBsymb = SD.nextLine();
+        System.out.print("Write the symbol for white color - ");
+        String newWsymb = SD.nextLine();
         DefaultB = newBsymb;
         DefaultD = newDsymb;
         DefaultMB = newMBsymb;
+        DefaultW = newWsymb;
         System.out.println(" ");
       } else {
-        symbol = false;
         System.out.println("Symbols will not change");
       }
       for (int y = 0; y < source.getHeight(); y++) {
@@ -106,6 +114,15 @@ public class Image {
           }
         }
       }
+      int check = ValuesColor[0];
+      int BlackDivide;
+      int GrayDivide;
+      int BrightDivide;
+      int White;
+      BlackDivide = (int) (check * 0.245);
+      GrayDivide = (int) (check * 0.254);
+      BrightDivide = (int) (check * 0.267);
+      White = check - BlackDivide - GrayDivide - BrightDivide;
       int xSquare = source.getWidth();
       int ySquare = source.getHeight();
       for (int i = 0; i <= count; i++) {
@@ -114,44 +131,65 @@ public class Image {
                 + ValuesCount[i]);
       }
       System.out.println("Total count of the pixels = " + xSquare * ySquare);
-      System.out.print("Choose the number of a color" + " (from " + 0 + " to " + count + ") - ");
+      System.out.println("Change a range of colors? (1 - Yes)\n"
+          + "Default:\n"
+          + "White -> " + 255 + "-" + (check - White) + "\n"
+          + "Bright -> " + (check - White) + "-" + (check - White - BrightDivide) + "\n"
+          + "Gray -> " + (check - White - BrightDivide) + "-" + (check - White - BrightDivide
+          - GrayDivide) + "\n"
+          + "Black -> " + (check - White - BrightDivide - GrayDivide) + "-" + 0);
       Scanner CN = new Scanner(System.in);
+      System.out.print("Answer - ");
       int Number = CN.nextInt();
-      if (Number > count || Number < 0) {
-        System.out.println("Error, empty color detected");
-        error = true;
+      if (Number == 1) {
+        ColorsSettings = true;
       }
-      if (error) {
+      if (ColorsSettings) {
+        System.out.println("Custom Settings");
+        Scanner Colors = new Scanner(System.in);
+        System.out.print("Value of Black -> ");
+        int NewColors = Colors.nextInt();
+        BlackDivide = NewColors;
+        System.out.print("Value of Gray -> ");
+        NewColors = Colors.nextInt();
+        GrayDivide = NewColors;
+        System.out.print("Value of Bright -> ");
+        NewColors = Colors.nextInt();
+        BrightDivide = NewColors;
+
         for (int y = 0; y < source.getHeight(); y++) {
           for (int x = 0; x < source.getWidth(); x++) {
             writer.write(" ");
             Color color = new Color(source.getRGB(x, y));
             int RGB = color.getBlue();
-            if (RGB == 0) {
-              writer.write("&");
+            if (RGB <= BlackDivide) {
+              writer.write(DefaultD);
+            } else if (RGB <= GrayDivide) {
+              writer.write(DefaultB);
+            } else if (RGB <= BrightDivide) {
+              writer.write(DefaultMB);
             } else {
-              writer.write(" ");
+              writer.write(DefaultW);
             }
           }
           writer.write("\r\n");
         }
       } else {
+        System.out.println("Default Settings");
         for (int y = 0; y < source.getHeight(); y++) {
           for (int x = 0; x < source.getWidth(); x++) {
             writer.write(" ");
             Color color = new Color(source.getRGB(x, y));
             int RGB = color.getBlue();
 
-            if (RGB <= ValuesColor[Number]) {
-              if (RGB <= 30) {
-                writer.write(DefaultD);
-              } else if (RGB > 30 && RGB <= 135) {
-                writer.write(DefaultB);
-              } else {
-                writer.write(DefaultMB);
-              }
+            if (RGB <= BlackDivide) {
+              writer.write(DefaultD);
+            } else if (RGB <= BlackDivide + GrayDivide) {
+              writer.write(DefaultB);
+            } else if (RGB <= BlackDivide + GrayDivide + BrightDivide) {
+              writer.write(DefaultMB);
             } else {
-              writer.write(" ");
+              writer.write(DefaultW);
             }
 
           }
@@ -162,6 +200,9 @@ public class Image {
       System.out.println("--Success--");
       System.out.println("The file was generated");
       System.out.println("Path: " + TextedFile.getName());
+      long finish = System.currentTimeMillis() - start;
+      System.out.println(
+          "Total time of work (Custom Convertor) - " + finish / 1000 + "." + finish % 1000 + "s");
     } catch (IOException e) {
 
       System.out.println("Invalid path or Out of memory");
@@ -173,14 +214,11 @@ public class Image {
   public void TextBuilderAuto() {
     File TextedFile = new File("Texted Image.txt");
     try (FileWriter writer = new FileWriter(TextedFile)) {
-
+      long start = System.currentTimeMillis();
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
       int min = 256;
       int[] ValuesColor = new int[255];
-      int[] ValuesCount = new int[255];
-      ArrayList<Integer> ColorDivide = new ArrayList<>();
-
       int count = 0;
       for (int y = 0; y < source.getHeight(); y++) {
         for (int x = 0; x < source.getWidth(); x++) {
@@ -194,23 +232,14 @@ public class Image {
           }
         }
       }
-      for (int y = 0; y < source.getHeight(); y++) {
-        for (int x = 0; x < source.getWidth(); x++) {
-          Color color = new Color(source.getRGB(x, y));
-          int RGB = color.getBlue();
-          for (int k = 0; k <= count; k++) {
-            if (ValuesColor[k] == RGB) {
-              ValuesCount[k] = ValuesCount[k] + 1;
-            }
-          }
-        }
-      }
 
       int check = ValuesColor[0];
       int BlackDivide;
       int GrayDivide;
+      int BrightDivide;
       BlackDivide = (int) (check * 0.245);
       GrayDivide = (int) (check * 0.254);
+      BrightDivide = (int) (check * 0.267);
 
       // Draw
       for (int y = 0; y < source.getHeight(); y++) {
@@ -219,14 +248,12 @@ public class Image {
           Color color = new Color(source.getRGB(x, y));
           int RGB = color.getBlue();
 
-          if (RGB <= check) {
-            if (RGB <= BlackDivide) {
-              writer.write("&");
-            } else if (RGB > BlackDivide && RGB <= BlackDivide + GrayDivide) {
-              writer.write("*");
-            } else {
-              writer.write("·");
-            }
+          if (RGB <= BlackDivide) {
+            writer.write("&");
+          } else if (RGB <= BlackDivide + GrayDivide) {
+            writer.write("*");
+          } else if (RGB <= BlackDivide + GrayDivide + BrightDivide) {
+            writer.write("·");
           } else {
             writer.write(" ");
           }
@@ -239,6 +266,9 @@ public class Image {
       System.out.println("--Success--");
       System.out.println("The file was generated");
       System.out.println("Path: " + TextedFile.getName());
+      long finish = System.currentTimeMillis() - start;
+      System.out.println(
+          "Total time of work (Auto Convertor)- " + finish / 1000 + "." + finish % 1000 + "s");
 
     } catch (IOException e) {
       System.out.println("Invalid path or Out of memory");
