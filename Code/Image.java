@@ -1,6 +1,7 @@
 package com.company;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
@@ -46,9 +47,8 @@ public class Image {
   }
 
   public void TextBuilderCustom() {
-    try {
-      File TextedFile = new File("Texted Image.txt");
-      FileWriter writer = new FileWriter(TextedFile);
+    File TextedFile = new File("Texted Image.txt");
+    try (FileWriter writer = new FileWriter(TextedFile)) {
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
       boolean error = false;
@@ -159,9 +159,9 @@ public class Image {
         }
       }
       writer.flush();
-      writer.close();
       System.out.println("--Success--");
-      System.out.println("The file was generated in a User directory");
+      System.out.println("The file was generated");
+      System.out.println("Path: " + TextedFile.getName());
     } catch (IOException e) {
 
       System.out.println("Invalid path or Out of memory");
@@ -171,14 +171,15 @@ public class Image {
   }
 
   public void TextBuilderAuto() {
-    try {
-      File TextedFile = new File("Texted Image.txt");
-      FileWriter writer = new FileWriter(TextedFile);
+    File TextedFile = new File("Texted Image.txt");
+    try (FileWriter writer = new FileWriter(TextedFile)) {
+
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
       int min = 256;
       int[] ValuesColor = new int[255];
       int[] ValuesCount = new int[255];
+      ArrayList<Integer> ColorDivide = new ArrayList<>();
 
       int count = 0;
       for (int y = 0; y < source.getHeight(); y++) {
@@ -204,29 +205,24 @@ public class Image {
           }
         }
       }
-      int Sum = 0;
-      for (int i = 0; i <= count; i++) {
 
-        Sum = Sum + ValuesCount[i];
-      }
-      int Avg = Sum / count;
-      int check = 0;
-      for (int i = 0; i <= count; i++) {
-        if (ValuesCount[i] >= Avg) {
-          check = i + 1;
-        }
-      }
+      int check = ValuesColor[0];
+      int BlackDivide;
+      int GrayDivide;
+      BlackDivide = (int) (check * 0.245);
+      GrayDivide = (int) (check * 0.254);
 
+      // Draw
       for (int y = 0; y < source.getHeight(); y++) {
         for (int x = 0; x < source.getWidth(); x++) {
           writer.write(" ");
           Color color = new Color(source.getRGB(x, y));
           int RGB = color.getBlue();
 
-          if (RGB <= ValuesColor[check]) {
-            if (RGB <= 30) {
+          if (RGB <= check) {
+            if (RGB <= BlackDivide) {
               writer.write("&");
-            } else if (RGB > 30 && RGB <= 135) {
+            } else if (RGB > BlackDivide && RGB <= BlackDivide + GrayDivide) {
               writer.write("*");
             } else {
               writer.write("·");
@@ -239,12 +235,12 @@ public class Image {
         writer.write("\r\n");
       }
       writer.flush();
-      writer.close();
+
       System.out.println("--Success--");
-      System.out.println("The file was generated in a User directory");
+      System.out.println("The file was generated");
+      System.out.println("Path: " + TextedFile.getName());
 
     } catch (IOException e) {
-
       System.out.println("Invalid path or Out of memory");
     }
 
