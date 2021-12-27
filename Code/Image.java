@@ -131,6 +131,7 @@ public class Image {
                 + ValuesCount[i]);
       }
       System.out.println("Total count of the pixels = " + xSquare * ySquare);
+      System.out.println("Size - " + xSquare + "*" + ySquare);
       System.out.println("Change a range of colors? (1 - Yes)\n"
           + "Default:\n"
           + "White -> " + 255 + "-" + (check - White) + "\n"
@@ -156,46 +157,29 @@ public class Image {
         System.out.print("Value of Bright -> ");
         NewColors = Colors.nextInt();
         BrightDivide = NewColors;
-
-        for (int y = 0; y < source.getHeight(); y++) {
-          for (int x = 0; x < source.getWidth(); x++) {
-            writer.write(" ");
-            Color color = new Color(source.getRGB(x, y));
-            int RGB = color.getBlue();
-            if (RGB <= BlackDivide) {
-              writer.write(DefaultD);
-            } else if (RGB <= GrayDivide) {
-              writer.write(DefaultB);
-            } else if (RGB <= BrightDivide) {
-              writer.write(DefaultMB);
-            } else {
-              writer.write(DefaultW);
-            }
-          }
-          writer.write("\r\n");
-        }
       } else {
         System.out.println("Default Settings");
-        for (int y = 0; y < source.getHeight(); y++) {
-          for (int x = 0; x < source.getWidth(); x++) {
-            writer.write(" ");
-            Color color = new Color(source.getRGB(x, y));
-            int RGB = color.getBlue();
-
-            if (RGB <= BlackDivide) {
-              writer.write(DefaultD);
-            } else if (RGB <= BlackDivide + GrayDivide) {
-              writer.write(DefaultB);
-            } else if (RGB <= BlackDivide + GrayDivide + BrightDivide) {
-              writer.write(DefaultMB);
-            } else {
-              writer.write(DefaultW);
-            }
-
-          }
-          writer.write("\r\n");
-        }
       }
+      for (int y = 0; y < source.getHeight(); y++) {
+        for (int x = 0; x < source.getWidth(); x++) {
+          writer.write(" ");
+          Color color = new Color(source.getRGB(x, y));
+          int RGB = color.getBlue();
+
+          if (RGB <= BlackDivide) {
+            writer.write(DefaultD);
+          } else if (RGB <= BlackDivide + GrayDivide) {
+            writer.write(DefaultB);
+          } else if (RGB <= BlackDivide + GrayDivide + BrightDivide) {
+            writer.write(DefaultMB);
+          } else {
+            writer.write(DefaultW);
+          }
+
+        }
+        writer.write("\r\n");
+      }
+
       writer.flush();
       System.out.println("--Success--");
       System.out.println("The file was generated");

@@ -19,8 +19,9 @@ public class Main {
     switch (choose) {
       case (1) -> picture.TextBuilderAuto();
       case (2) -> picture.TextBuilderCustom();
-      default -> System.out.print("Wrong number of the operation");
+      default -> System.out.println("Wrong number of the operation");
     }
+
     long SessionFinish = System.currentTimeMillis() - SessionStart;
     System.out.println(
         "Total time of work - " + SessionFinish / 1000 + "." + SessionFinish % 1000 + "s");
