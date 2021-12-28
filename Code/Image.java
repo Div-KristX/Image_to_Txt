@@ -61,8 +61,8 @@ public class Image {
       int[] ValuesColor = new int[255];
       int[] ValuesCount = new int[255];
       Scanner c = new Scanner(System.in);
-      Scanner SB = new Scanner(System.in);
-      Scanner SD = new Scanner(System.in);
+      Scanner SymbolsScanner = new Scanner(System.in);
+
       int count = 0;
       System.out.println(
           "Change default symbols? (1 - Yes)\n"
@@ -76,17 +76,17 @@ public class Image {
       if (chars == 1) {
         symbol = true;
         System.out.print("Write the symbol for dark color - ");
-        String newDsymb = SD.nextLine();
+        String newDsymb = SymbolsScanner.nextLine();
         System.out.print("Write the symbol for bright color - ");
-        String newBsymb = SB.nextLine();
+        String newBsymb = SymbolsScanner.nextLine();
         System.out.print("Write the symbol for the brightest color - ");
-        String newMBsymb = SD.nextLine();
+        String newTBsymb = SymbolsScanner.nextLine();
         System.out.print("Write the symbol for white color - ");
-        String newWsymb = SD.nextLine();
+        String newWTsymb = SymbolsScanner.nextLine();
         DefaultB = newBsymb;
         DefaultD = newDsymb;
-        DefaultMB = newMBsymb;
-        DefaultW = newWsymb;
+        DefaultMB = newTBsymb;
+        DefaultW = newWTsymb;
         System.out.println(" ");
       } else {
         System.out.println("Symbols will not change");
