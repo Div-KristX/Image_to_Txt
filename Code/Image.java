@@ -65,12 +65,12 @@ public class Image {
       Scanner SD = new Scanner(System.in);
       int count = 0;
       System.out.println(
-          "Change default symbols? \n"
+          "Change default symbols? (1 - Yes)\n"
               + "(&) - for dark,\n"
               + "(*) - for bright, \n"
               + "(·) - for the brightest (Sometimes it can not be viewed, it is a Unicode symbol), \n"
               + "( ) - for white");
-      System.out.print("Write 1 to change - ");
+      System.out.print("Answer - ");
       int chars = c.nextInt();
 
       if (chars == 1) {
@@ -118,11 +118,16 @@ public class Image {
       int BlackDivide;
       int GrayDivide;
       int BrightDivide;
-      int White;
+
       BlackDivide = (int) (check * 0.245);
       GrayDivide = (int) (check * 0.254);
       BrightDivide = (int) (check * 0.267);
-      White = check - BlackDivide - GrayDivide - BrightDivide;
+
+      int Black, Gray, Bright;
+      Black = BlackDivide;
+      Gray = BlackDivide + GrayDivide;
+      Bright = BlackDivide + GrayDivide + BrightDivide;
+
       int xSquare = source.getWidth();
       int ySquare = source.getHeight();
       for (int i = 0; i <= count; i++) {
@@ -134,11 +139,10 @@ public class Image {
       System.out.println("Size - " + xSquare + "*" + ySquare);
       System.out.println("Change a range of colors? (1 - Yes)\n"
           + "Default:\n"
-          + "White -> " + 255 + "-" + (check - White) + "\n"
-          + "Bright -> " + (check - White) + "-" + (check - White - BrightDivide) + "\n"
-          + "Gray -> " + (check - White - BrightDivide) + "-" + (check - White - BrightDivide
-          - GrayDivide) + "\n"
-          + "Black -> " + (check - White - BrightDivide - GrayDivide) + "-" + 0);
+          + "White  -> " + 255 + "-" + Bright + "\n"
+          + "Bright -> " + Bright + "-" + Gray + "\n"
+          + "Gray   -> " + Gray + "-" + Black + "\n"
+          + "Black  -> " + Black + "-" + 0);
       Scanner CN = new Scanner(System.in);
       System.out.print("Answer - ");
       int Number = CN.nextInt();
@@ -148,15 +152,15 @@ public class Image {
       if (ColorsSettings) {
         System.out.println("Custom Settings");
         Scanner Colors = new Scanner(System.in);
-        System.out.print("Value of Black -> ");
+        System.out.print("Value of Black  -> ");
         int NewColors = Colors.nextInt();
-        BlackDivide = NewColors;
-        System.out.print("Value of Gray -> ");
+        Black = NewColors;
+        System.out.print("Value of Gray   -> ");
         NewColors = Colors.nextInt();
-        GrayDivide = NewColors;
+        Gray = NewColors;
         System.out.print("Value of Bright -> ");
         NewColors = Colors.nextInt();
-        BrightDivide = NewColors;
+        Bright = NewColors;
       } else {
         System.out.println("Default Settings");
       }
@@ -166,11 +170,11 @@ public class Image {
           Color color = new Color(source.getRGB(x, y));
           int RGB = color.getBlue();
 
-          if (RGB <= BlackDivide) {
+          if (RGB <= Black) {
             writer.write(DefaultD);
-          } else if (RGB <= BlackDivide + GrayDivide) {
+          } else if (RGB <= Gray) {
             writer.write(DefaultB);
-          } else if (RGB <= BlackDivide + GrayDivide + BrightDivide) {
+          } else if (RGB <= Bright) {
             writer.write(DefaultMB);
           } else {
             writer.write(DefaultW);
