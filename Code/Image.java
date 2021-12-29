@@ -187,7 +187,7 @@ public class Image {
       writer.flush();
       System.out.println("--Success--");
       System.out.println("The file was generated");
-      System.out.println("Path: " + TextedFile.getName());
+      System.out.println("Path: " + TextedFile.getAbsolutePath());
       long finish = System.currentTimeMillis() - start;
       System.out.println(
           "Total time of work (Custom Convertor) - " + finish / 1000 + "." + finish % 1000 + "s");
@@ -253,7 +253,7 @@ public class Image {
 
       System.out.println("--Success--");
       System.out.println("The file was generated");
-      System.out.println("Path: " + TextedFile.getName());
+      System.out.println("Path: " + TextedFile.getAbsolutePath());
       long finish = System.currentTimeMillis() - start;
       System.out.println(
           "Total time of work (Auto Convertor)- " + finish / 1000 + "." + finish % 1000 + "s");
