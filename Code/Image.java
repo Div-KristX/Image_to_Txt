@@ -1,6 +1,9 @@
 package com.company;
 
 import java.awt.image.BufferedImage;
+import java.util.ListIterator;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.awt.Color;
@@ -200,35 +203,58 @@ public class Image {
   }
 
   public void TextBuilderAuto() {
+    boolean HighPrecision = false;
     File TextedFile = new File("Texted Image.txt");
     try (FileWriter writer = new FileWriter(TextedFile)) {
       long start = System.currentTimeMillis();
+      int check;
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
-      int min = 256;
-      int[] ValuesColor = new int[255];
-      int count = 0;
-      for (int y = 0; y < source.getHeight(); y++) {
-        for (int x = 0; x < source.getWidth(); x++) {
-          Color color = new Color(source.getRGB(x, y));
-          int RGB = color.getBlue();
-          if (min > RGB) {
-            min = RGB;
-            ValuesColor[count] = min;
-            ++count;
-
+      System.out.print("Choose mode - (1 - Medium, 2 - High precision) - ");
+      Scanner answ = new Scanner(System.in);
+      int answer = answ.nextInt();
+      if (answer == 2) {
+        HighPrecision = true;
+      } else if (answer == 1) {
+        HighPrecision = false;
+      } else {
+        System.out.println("Wrong number, auto choose (Medium precision)");
+      }
+      if (HighPrecision) {
+        TreeSet<Integer> ValuesColorHighPrecision = new TreeSet<>();
+        for (int y = 0; y < source.getHeight(); y++) {
+          for (int x = 0; x < source.getWidth(); x++) {
+            Color color = new Color(source.getRGB(x, y));
+            int RGB = color.getBlue();
+            ValuesColorHighPrecision.add(RGB);
           }
         }
+        check = ValuesColorHighPrecision.last();
+      } else {
+        int min = 256;
+        int[] ValuesColor = new int[255];
+        int count = 0;
+        for (int y = 0; y < source.getHeight(); y++) {
+          for (int x = 0; x < source.getWidth(); x++) {
+            Color color = new Color(source.getRGB(x, y));
+            int RGB = color.getBlue();
+            if (min > RGB) {
+              min = RGB;
+              ValuesColor[count] = min;
+              ++count;
+
+            }
+          }
+        }
+        check = ValuesColor[0];
       }
 
-      int check = ValuesColor[0];
       int BlackDivide;
       int GrayDivide;
       int BrightDivide;
       BlackDivide = (int) (check * 0.245);
       GrayDivide = (int) (check * 0.254);
       BrightDivide = (int) (check * 0.267);
-
       // Draw
       for (int y = 0; y < source.getHeight(); y++) {
         for (int x = 0; x < source.getWidth(); x++) {
