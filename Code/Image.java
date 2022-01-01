@@ -1,8 +1,6 @@
 package com.company;
 
 import java.awt.image.BufferedImage;
-import java.util.ListIterator;
-import java.util.Set;
 import java.util.TreeSet;
 import javax.imageio.ImageIO;
 import java.io.File;
