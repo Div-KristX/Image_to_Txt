@@ -11,7 +11,7 @@ public class Main {
     System.out.print("Write the path, to an image - ");
     String path = str.nextLine();
     picture.converter(path);
-    System.out.print("Choose mode (1 - Auto convert, 2 - Custom convert) - ");
+    System.out.print("Select mode (1 - Auto convert, 2 - Custom convert) - ");
     int choose = ch.nextInt();
 
     switch (choose) {

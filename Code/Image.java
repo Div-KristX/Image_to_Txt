@@ -144,28 +144,44 @@ public class Image {
         }
       } else {
         int ColorsSum = 0;
-        for (int i = 0; i < Black; i++) {
+        int breakpoint = 0;
+        for (int i = 0; i < 254; i++) {
+          if (ValuesColor[i] > Black) {
+            breakpoint = i;
+            break;
+          }
           ColorsSum = ColorsSum + ValuesCount[i];
         }
         System.out.println(
             "1." + " Color (Black)  -> " + 0 + " - " + Black + "  \t Quantity of the pixels = "
                 + ColorsSum);
         ColorsSum = 0;
-        for (int i = Black; i < Gray; i++) {
+        for (int i = breakpoint; i < 254; i++) {
+          if (ValuesColor[i] > Gray) {
+            breakpoint = i;
+            break;
+          }
           ColorsSum = ColorsSum + ValuesCount[i];
         }
         System.out.println(
             "2." + " Color (Gray)   -> " + Black + " - " + Gray + " \t Quantity of the pixels = "
                 + ColorsSum);
         ColorsSum = 0;
-        for (int i = Gray; i < Bright; i++) {
+        for (int i = breakpoint; i < 254; i++) {
+          if (ValuesColor[i] > Bright) {
+            breakpoint = i;
+            break;
+          }
           ColorsSum = ColorsSum + ValuesCount[i];
         }
         System.out.println(
             "3." + " Color (Bright) -> " + Gray + " - " + Bright + "\t Quantity of the pixels = "
                 + ColorsSum);
         ColorsSum = 0;
-        for (int i = Bright; i <= ValuesColor.length - 1; i++) {
+        for (int i = breakpoint; i < ValuesColor.length; i++) {
+          if (ValuesColor[i] > 255) {
+            break;
+          }
           ColorsSum = ColorsSum + ValuesCount[i];
         }
         System.out.println(
