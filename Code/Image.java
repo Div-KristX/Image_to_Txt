@@ -1,6 +1,7 @@
 package com.company;
 
 import java.awt.image.BufferedImage;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -53,29 +54,27 @@ public class Image {
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
       boolean ColorsSettings = false;
-      boolean symbol = false;
+      boolean FullInfo = false;
       String DefaultB = "*";
       String DefaultD = "&";
       String DefaultMB = "·";
       String DefaultW = " ";
-      int min = 256;
-      int[] ValuesColor = new int[255];
-      int[] ValuesCount = new int[255];
+      int IntVar = 0;
+
       Scanner c = new Scanner(System.in);
       Scanner SymbolsScanner = new Scanner(System.in);
 
-      int count = 0;
       System.out.println(
-          "Change default symbols? (1 - Yes)\n"
-              + "(&) - for dark,\n"
-              + "(*) - for bright, \n"
-              + "(·) - for the brightest (Sometimes it can not be viewed, it is a Unicode symbol), \n"
-              + "( ) - for white");
+          """
+              Change default symbols? (1 - Yes)
+              (&) - for dark,
+              (*) - for bright,\s
+              (·) - for the brightest (Sometimes it can not be viewed, it is a Unicode symbol),\s
+              ( ) - for white""");
       System.out.print("Answer - ");
       int chars = c.nextInt();
 
       if (chars == 1) {
-        symbol = true;
         System.out.print("Write the symbol for dark color - ");
         String newDsymb = SymbolsScanner.nextLine();
         System.out.print("Write the symbol for bright color - ");
@@ -83,39 +82,42 @@ public class Image {
         System.out.print("Write the symbol for the brightest color - ");
         String newTBsymb = SymbolsScanner.nextLine();
         System.out.print("Write the symbol for white color - ");
-        String newWTsymb = SymbolsScanner.nextLine();
+        String newWhiteSymbol = SymbolsScanner.nextLine();
         DefaultB = newBsymb;
         DefaultD = newDsymb;
         DefaultMB = newTBsymb;
-        DefaultW = newWTsymb;
+        DefaultW = newWhiteSymbol;
         System.out.println(" ");
       } else {
         System.out.println("Symbols will not change");
       }
+      SortedSet<Integer> ValuesColorFull = new TreeSet<>();
       for (int y = 0; y < source.getHeight(); y++) {
         for (int x = 0; x < source.getWidth(); x++) {
           Color color = new Color(source.getRGB(x, y));
           int RGB = color.getBlue();
-          if (min > RGB) {
-            min = RGB;
-            ValuesColor[count] = min;
-            ++count;
-
-          }
+          ValuesColorFull.add(RGB);
         }
       }
+      int[] ValuesColor = new int[ValuesColorFull.size()];
+      int[] ValuesCount = new int[ValuesColor.length];
+      for (Integer var : ValuesColorFull) {
+        ValuesColor[IntVar] = var;
+        IntVar++;
+      }
+
       for (int y = 0; y < source.getHeight(); y++) {
         for (int x = 0; x < source.getWidth(); x++) {
           Color color = new Color(source.getRGB(x, y));
           int RGB = color.getBlue();
-          for (int k = 0; k <= count; k++) {
+          for (int k = 0; k <= ValuesColor.length - 1; k++) {
             if (ValuesColor[k] == RGB) {
               ValuesCount[k] = ValuesCount[k] + 1;
             }
           }
         }
       }
-      int check = ValuesColor[0];
+      int check = ValuesColorFull.last();
       int BlackDivide;
       int GrayDivide;
       int BrightDivide;
@@ -129,13 +131,52 @@ public class Image {
       Gray = BlackDivide + GrayDivide;
       Bright = BlackDivide + GrayDivide + BrightDivide;
 
+      System.out.print("Full information about this image? (1 - Yes) - ");
+      int answer = SymbolsScanner.nextInt();
+      if (answer == 1) {
+        FullInfo = true;
+      }
+      if (FullInfo) {
+        for (int i = 0; i <= ValuesColor.length - 1; i++) {
+          System.out.println(
+              i + "." + "\t Color = " + ValuesColor[i] + " ->" + "\t Quantity of the pixels = "
+                  + ValuesCount[i]);
+        }
+      } else {
+        int ColorsSum = 0;
+        for (int i = 0; i < Black; i++) {
+          ColorsSum = ColorsSum + ValuesCount[i];
+        }
+        System.out.println(
+            "1." + " Color (Black)  -> " + 0 + " - " + Black + "  \t Quantity of the pixels = "
+                + ColorsSum);
+        ColorsSum = 0;
+        for (int i = Black; i < Gray; i++) {
+          ColorsSum = ColorsSum + ValuesCount[i];
+        }
+        System.out.println(
+            "2." + " Color (Gray)   -> " + Black + " - " + Gray + " \t Quantity of the pixels = "
+                + ColorsSum);
+        ColorsSum = 0;
+        for (int i = Gray; i < Bright; i++) {
+          ColorsSum = ColorsSum + ValuesCount[i];
+        }
+        System.out.println(
+            "3." + " Color (Bright) -> " + Gray + " - " + Bright + "\t Quantity of the pixels = "
+                + ColorsSum);
+        ColorsSum = 0;
+        for (int i = Bright; i <= ValuesColor.length - 1; i++) {
+          ColorsSum = ColorsSum + ValuesCount[i];
+        }
+        System.out.println(
+            "4." + " Color (White)  -> " + Bright + " - " + 255 + "\t Quantity of the pixels = "
+                + ColorsSum);
+
+      }
+
       int xSquare = source.getWidth();
       int ySquare = source.getHeight();
-      for (int i = 0; i <= count; i++) {
-        System.out.println(
-            i + "." + "\t Color = " + ValuesColor[i] + " ->" + "\t Quantity of the pixels = "
-                + ValuesCount[i]);
-      }
+
       System.out.println("Total count of the pixels = " + xSquare * ySquare);
       System.out.println("Size - " + xSquare + "*" + ySquare);
       System.out.println("Change a range of colors? (1 - Yes)\n"
@@ -208,15 +249,14 @@ public class Image {
       int check;
       File jpg = new File("WhiteBlackImage.jpg");
       BufferedImage source = ImageIO.read(jpg);
-      System.out.print("Choose mode - (1 - Medium, 2 - High precision) - ");
-      Scanner answ = new Scanner(System.in);
-      int answer = answ.nextInt();
-      if (answer == 2) {
+      System.out.print("Select mode (1 - Medium, 2 - High precision) - ");
+      Scanner answer = new Scanner(System.in);
+      int Answer = answer.nextInt();
+      if (Answer == 2) {
         HighPrecision = true;
-      } else if (answer == 1) {
-        HighPrecision = false;
+        System.out.println("Selected High");
       } else {
-        System.out.println("Wrong number, auto choose (Medium precision)");
+        System.out.println("Selected Medium");
       }
       if (HighPrecision) {
         TreeSet<Integer> ValuesColorHighPrecision = new TreeSet<>();
